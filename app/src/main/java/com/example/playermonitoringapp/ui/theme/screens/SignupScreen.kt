@@ -58,10 +58,12 @@ import kotlinx.coroutines.tasks.await
 private lateinit var auth: FirebaseAuth
 
 @Composable
-fun SigninScreen(navController: NavController) {
-    var email by remember { mutableStateOf("") } // Changed from username to email
+fun SignupScreen(navController: NavController) {
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var repassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var isVerificationSent by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -80,15 +82,15 @@ fun SigninScreen(navController: NavController) {
 
             // Logo
             Image(
-                painter = painterResource(id = R.drawable.player_1), // Replace with your logo resource
-                contentDescription = "Logo", modifier = Modifier.size(300.dp)
+                painter = painterResource(id = R.drawable.messi_png),
+                contentDescription = "Logo", modifier = Modifier.size(400.dp)
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             // Login Title
             Text(
-                text = "Sign In",
+                text = "Signup",
                 color = Color.White,
                 style = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold)
             )
@@ -97,7 +99,7 @@ fun SigninScreen(navController: NavController) {
 
             // Subtitle
             Text(
-                text = "Please sign in to continue",
+                text = "Please Create an Account to continue",
                 color = Color.Gray,
                 style = TextStyle(fontSize = 14.sp)
             )
@@ -108,11 +110,11 @@ fun SigninScreen(navController: NavController) {
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
+                label = { Text("Write an Email") },
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_user), // Replace with your icon resource
-                        contentDescription = "Email Icon"
+                        painter = painterResource(id = R.drawable.ic_user),
+                        contentDescription = "Username Icon"
                     )
                 },
                 colors = OutlinedTextFieldDefaults.colors(
@@ -137,10 +139,10 @@ fun SigninScreen(navController: NavController) {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text("Write a Password") },
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(id = R.drawable.baseline_password), // Replace with your icon resource
+                        painter = painterResource(id = R.drawable.baseline_password),
                         contentDescription = "Password Icon"
                     )
                 },
@@ -165,62 +167,109 @@ fun SigninScreen(navController: NavController) {
                 ),
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password, imeAction = ImeAction.Done
+                    keyboardType = KeyboardType.Password, imeAction = ImeAction.Next
                 ),
                 shape = RoundedCornerShape(16.dp)
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Forgot Password
-            Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
-            ) {
-                Text(
-                    text = "Forgot Password?",
-                    color = FotGreen,
-                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium),
-                    modifier = Modifier.clickable {
-                        // Navigate to forgot password screen (if you have one)
+            // Repeat Password Input
+            OutlinedTextField(
+                value = repassword,
+                onValueChange = { repassword = it },
+                label = { Text("Repeat Your Password") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_password),
+                        contentDescription = "Password Icon"
+                    )
+                },
+                trailingIcon = {
+                    val icon = if (passwordVisible) R.drawable.view else R.drawable.close_eye
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            painter = painterResource(id = icon),
+                            contentDescription = "Toggle Password Visibility"
+                        )
                     }
-                )
-            }
+                },
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.White,
+                    unfocusedPlaceholderColor = FotGreen,
+                    focusedContainerColor = Color.DarkGray,
+                    unfocusedContainerColor = Color.DarkGray,
+                    focusedBorderColor = FotGreen,
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = FotGreen,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password, imeAction = ImeAction.Next
+                ),
+                shape = RoundedCornerShape(16.dp)
+            )
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            // Login Button
+            // Register Button
             Button(
                 onClick = {
+                    // Validate passwords match
+                    if (password != repassword) {
+                        Toast.makeText(context, "Passwords don't match", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
                     coroutineScope.launch {
                         try {
-                            // Sign in with email and password
-                            val authResult = auth.signInWithEmailAndPassword(email, password).await()
-                            val user = authResult.user
-
-                            // Check if email is verified
-                            if (user != null && user.isEmailVerified) {
-                                // Navigate to home screen
-                                navController.navigate(AppRoutes.HOME_ROUTE)
-                            } else {
+                            // Check if the email is already in use
+                            val signInMethods = auth.fetchSignInMethodsForEmail(email).await()
+                            if (signInMethods.signInMethods?.isNotEmpty() == true) {
+                                // Email is already in use
                                 Toast.makeText(
                                     context,
-                                    "Please verify your email first.",
-                                    Toast.LENGTH_SHORT
+                                    "Email is already in use by another account.",
+                                    Toast.LENGTH_LONG
                                 ).show()
+                                return@launch
                             }
-                        } catch (e: Exception) {
-                            Log.w(TAG, "Sign-in error: ${e.message}")
+
+                            // 1. Create user account
+                            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+                            val user = authResult.user
+
+                            // 2. Send verification email
+                            user?.sendEmailVerification()?.await()
+
+                            // 3. Update UI state
+                            isVerificationSent = true
+
+                            // 4. Show success message
                             Toast.makeText(
                                 context,
-                                "Sign-in failed: ${e.message}",
-                                Toast.LENGTH_SHORT
+                                "Verification email sent! Please check your inbox.",
+                                Toast.LENGTH_LONG
+                            ).show()
+
+                            // 5. Navigate to the sign-in screen
+                            navController.navigate(AppRoutes.SIGNIN_ROUTE)
+
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Signup error: ${e.message}")
+                            Toast.makeText(
+                                context,
+                                "Error: ${e.message?.substringAfter("]")?.trim()}",
+                                Toast.LENGTH_LONG
                             ).show()
                         }
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = FotGreen,
-                    contentColor = Color.White
+                    contentColor = Color.DarkGray,
+                    disabledContainerColor = Color.Gray
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -230,31 +279,36 @@ fun SigninScreen(navController: NavController) {
                     pressedElevation = 7.dp
                 )
             ) {
+                Text("Register")
+            }
+
+            // Show verification message if email is sent
+            if (isVerificationSent) {
+                Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    text = "Login",
-                    style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    text = "Verification email sent! Please check your inbox.",
+                    color = FotGreen,
+                    style = TextStyle(fontSize = 14.sp)
                 )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Sign Up Link
+            // Sign In Link
             Row(
                 modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Don’t have an account?",
+                    text = "Already have an account?",
                     color = Color.Gray,
                     style = TextStyle(fontSize = 14.sp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "Sign Up",
+                    text = "Sign in",
+                    modifier = Modifier.clickable { navController.navigate(AppRoutes.SIGNIN_ROUTE) },
                     color = FotGreen,
-                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium),
-                    modifier = Modifier.clickable {
-                        navController.navigate(AppRoutes.SIGNUP_ROUTE)
-                    }
+                    style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Medium)
                 )
             }
         }

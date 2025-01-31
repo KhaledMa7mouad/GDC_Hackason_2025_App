@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "591132713947",
+    "project_id": "player-monitoring-app-c2f37",
+    "storage_bucket": "player-monitoring-app-c2f37.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591132713947:android:1643f025585d53c860bdfe",
+        "android_client_info": {
+          "package_name": "com.example.playermonitoringapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoLQm-HO_TlTtzlE-kxmqc3tfWD_yNWLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
