@@ -81,7 +81,7 @@ fun SigninScreen(navController: NavController) {
             // Logo
             Image(
                 painter = painterResource(id = R.drawable.player_1), // Replace with your logo resource
-                contentDescription = "Logo", modifier = Modifier.size(300.dp)
+                contentDescription = "Logo", modifier = Modifier.size(400.dp)
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -108,11 +108,15 @@ fun SigninScreen(navController: NavController) {
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
+                label = { Text(
+                    "Email",
+                    color = Color.White
+                ) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_user), // Replace with your icon resource
-                        contentDescription = "Email Icon"
+                        contentDescription = "Email Icon",
+                        tint = FotGreen
                     )
                 },
                 colors = OutlinedTextFieldDefaults.colors(
@@ -137,11 +141,16 @@ fun SigninScreen(navController: NavController) {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = { Text(
+                    "Password" ,
+                    color = Color.White
+                ) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_password), // Replace with your icon resource
-                        contentDescription = "Password Icon"
+                        contentDescription = "Password Icon",
+                        tint = FotGreen
+
                     )
                 },
                 trailingIcon = {
@@ -149,7 +158,8 @@ fun SigninScreen(navController: NavController) {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             painter = painterResource(id = icon),
-                            contentDescription = "Toggle Password Visibility"
+                            contentDescription = "Toggle Password Visibility",
+                            tint = FotGreen
                         )
                     }
                 },

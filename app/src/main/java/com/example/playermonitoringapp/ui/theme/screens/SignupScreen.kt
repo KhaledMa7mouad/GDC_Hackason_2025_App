@@ -110,11 +110,12 @@ fun SignupScreen(navController: NavController) {
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Write an Email") },
+                label = { Text("Write an Email" , color = Color.White) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_user),
-                        contentDescription = "Username Icon"
+                        contentDescription = "Username Icon",
+                        tint = FotGreen
                     )
                 },
                 colors = OutlinedTextFieldDefaults.colors(
@@ -139,11 +140,12 @@ fun SignupScreen(navController: NavController) {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Write a Password") },
+                label = { Text("Write a Password" , color = Color.White) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_password),
-                        contentDescription = "Password Icon"
+                        contentDescription = "Password Icon",
+                        tint = FotGreen
                     )
                 },
                 trailingIcon = {
@@ -151,7 +153,8 @@ fun SignupScreen(navController: NavController) {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             painter = painterResource(id = icon),
-                            contentDescription = "Toggle Password Visibility"
+                            contentDescription = "Toggle Password Visibility",
+                                    tint = FotGreen
                         )
                     }
                 },
@@ -178,11 +181,12 @@ fun SignupScreen(navController: NavController) {
             OutlinedTextField(
                 value = repassword,
                 onValueChange = { repassword = it },
-                label = { Text("Repeat Your Password") },
+                label = { Text("Repeat Your Password" , color = Color.White) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_password),
-                        contentDescription = "Password Icon"
+                        contentDescription = "Password Icon",
+                        tint = FotGreen
                     )
                 },
                 trailingIcon = {
