@@ -80,7 +80,7 @@ fun SigninScreen(navController: NavController) {
 
             // Logo
             Image(
-                painter = painterResource(id = R.drawable.player_1), // Replace with your logo resource
+                painter = painterResource(id = R.drawable.bank), // Replace with your logo resource
                 contentDescription = "Logo", modifier = Modifier.size(400.dp)
             )
 
@@ -227,6 +227,7 @@ fun SigninScreen(navController: NavController) {
                             ).show()
                         }
                     }
+                    navController.navigate(AppRoutes.PREDICTION_INPUT_ROUTE)
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = FotGreen,

@@ -68,7 +68,7 @@ fun SplashScreen(navController: NavController) {
         ) {
 
             Image(
-                painter = painterResource(id = R.drawable.appicon),
+                painter = painterResource(id = R.drawable.appiconstock),
                 contentDescription = "App Logo",
                 modifier = Modifier.size(300.dp)
             )
@@ -77,7 +77,7 @@ fun SplashScreen(navController: NavController) {
 
 
             Text(
-                text = "Player Monitoring App",
+                text = "Credit scoring App",
                 color = Color.White,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold

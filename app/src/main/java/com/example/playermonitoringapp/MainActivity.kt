@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.playermonitoringapp.navigation.AppNavHost
 import com.example.playermonitoringapp.ui.theme.PlayerMonitoringAppTheme
+import com.example.playermonitoringapp.ui.theme.screens.ChatScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -18,6 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PlayerMonitoringAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    //ChatScreen(modifier = Modifier.padding(innerPadding))
                     AppNavHost(modifier = Modifier.padding(innerPadding))
                 }
             }

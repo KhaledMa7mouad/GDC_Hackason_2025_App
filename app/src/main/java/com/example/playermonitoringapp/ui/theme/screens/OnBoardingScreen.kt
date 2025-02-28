@@ -55,19 +55,19 @@ data class OnboardingPage(
 fun OnboardingScreen(navController: NavController) {
     val pages = listOf(
         OnboardingPage(
-            image = R.drawable.r9_png,
-            title = "Track Your Player Performance",
-            description = "Monitor real-time stats and progress of your team members"
+            image = R.drawable.score,
+            title = "Your Credit Score, Your Power",
+            description = "Unlock doors to better loans, and financial freedom – start your journey here!"
         ),
         OnboardingPage(
-            image = R.drawable.garengha_png,
-            title = "Track Your Player Health And Movement",
-            description = "Analyze sensor-driven insights—heart rate, recovery, and movement"
+            image = R.drawable.card,
+            title = "Master Your Score, Master Your Future",
+            description = "Turn \"good enough\" into \"exceptional\" with tailored tips and smart habits – no stress, just progress."
         ),
         OnboardingPage(
-            image = R.drawable.kaka_png,
-            title = "AI-Powered Game IQ: Uncover Hidden Edges",
-            description = "Decode your game DNA: master positioning, tactics, and plug performance leaks"
+            image = R.drawable.bot,
+            title = "AI Finance Coach, Always in Your Corner",
+            description = "Get instant advice, track improvements, and crush your goals – chat now, it’s free and judgment-free!"
         )
     )
 

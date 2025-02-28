@@ -82,7 +82,7 @@ fun SignupScreen(navController: NavController) {
 
             // Logo
             Image(
-                painter = painterResource(id = R.drawable.messi_png),
+                painter = painterResource(id = R.drawable.loan),
                 contentDescription = "Logo", modifier = Modifier.size(400.dp)
             )
 
