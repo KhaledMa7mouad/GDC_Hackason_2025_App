@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModelProvider
 import com.example.playermonitoringapp.navigation.AppNavHost
 import com.example.playermonitoringapp.ui.theme.PlayerMonitoringAppTheme
 import com.example.playermonitoringapp.ui.theme.screens.ChatScreen
+import com.example.playermonitoringapp.ui.theme.viewmodels.ChatBotViewModel
 
 
 class MainActivity : ComponentActivity() {

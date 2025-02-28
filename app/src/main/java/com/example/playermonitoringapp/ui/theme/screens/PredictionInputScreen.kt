@@ -1,18 +1,22 @@
 package com.example.playermonitoringapp.ui.theme.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,7 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.playermonitoringapp.API.PredictionRequest
 import com.example.playermonitoringapp.navigation.AppRoutes
+import com.example.playermonitoringapp.ui.theme.FotGreen
 import com.example.playermonitoringapp.ui.theme.viewmodels.PredictionViewModel
+
+// Define your custom color; you can also use your theme's color.
 
 @Composable
 fun PredictionInputScreen(
@@ -52,23 +59,28 @@ fun PredictionInputScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.Black)
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Enter Prediction Parameters", style = MaterialTheme.typography.h5)
-        InputField("Sex", sex) { sex = it }
-        InputField("Marital Status", maritalStatus) { maritalStatus = it }
-        InputField("Age", age) { age = it }
-        InputField("Salary", salary) { salary = it }
-        InputField("Additional Income", additionalIncome) { additionalIncome = it }
-        InputField("House Ownership", houseOwnership) { houseOwnership = it }
-        InputField("Home Telephone", homeTelephone) { homeTelephone = it }
-        InputField("Education Level", educationLevel) { educationLevel = it }
-        InputField("Loans Other Banks", loansOtherBanks) { loansOtherBanks = it }
-        InputField("Corporate Guarantee", corporateGuarantee) { corporateGuarantee = it }
-        InputField("Company 01 (1 for true, 0 for false)", company01) { company01 = it }
-        InputField("Company 10 (1 for true, 0 for false)", company10) { company10 = it }
+        Text(
+            "Enter Your Info",
+            style = MaterialTheme.typography.headlineMedium,
+            color = Color.White
+        )
+        StyledInputField(label = "Sex", value = sex, onValueChange = { sex = it })
+        StyledInputField(label = "Marital Status", value = maritalStatus, onValueChange = { maritalStatus = it })
+        StyledInputField(label = "Age", value = age, onValueChange = { age = it })
+        StyledInputField(label = "Salary", value = salary, onValueChange = { salary = it })
+        StyledInputField(label = "Additional Income", value = additionalIncome, onValueChange = { additionalIncome = it })
+        StyledInputField(label = "House Ownership", value = houseOwnership, onValueChange = { houseOwnership = it })
+        StyledInputField(label = "Home Telephone", value = homeTelephone, onValueChange = { homeTelephone = it })
+        StyledInputField(label = "Education Level", value = educationLevel, onValueChange = { educationLevel = it })
+        StyledInputField(label = "Loans Other Banks", value = loansOtherBanks, onValueChange = { loansOtherBanks = it })
+        StyledInputField(label = "Corporate Guarantee", value = corporateGuarantee, onValueChange = { corporateGuarantee = it })
+        StyledInputField(label = "Company 01 (1 for true, 0 for false)", value = company01, onValueChange = { company01 = it })
+        StyledInputField(label = "Company 10 (1 for true, 0 for false)", value = company10, onValueChange = { company10 = it })
 
         if (state.isLoading) {
             CircularProgressIndicator()
@@ -94,25 +106,34 @@ fun PredictionInputScreen(
                     Company_10 = company10 == "1"
                 )
                 viewModel.makePrediction(request)
-                // Do not navigate immediately; wait for the prediction result.
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = FotGreen,
+                contentColor = Color.DarkGray,
+                disabledContainerColor = Color.Gray
+            )
         ) {
             Text("Get Prediction")
         }
+
         Button(
             onClick = {
                 navController.navigate(AppRoutes.CHATSCREEN)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = FotGreen,
+                contentColor = Color.DarkGray,
+                disabledContainerColor = Color.Gray
+            )
         ) {
-            Text("User Screen")
+            Text("Chat With Ai")
         }
 
 
+
     }
-
-
 
     // Navigate to the result screen once a prediction result is available.
     LaunchedEffect(key1 = state.predictionResult) {
@@ -123,15 +144,28 @@ fun PredictionInputScreen(
 }
 
 @Composable
-fun InputField(label: String, value: String, onValueChange: (String) -> Unit) {
-    TextField(
+fun StyledInputField(label: String, value: String, onValueChange: (String) -> Unit) {
+    OutlinedTextField(
         value = value,
-        onValueChange = { newValue ->
-            // Allow only digits and a decimal point (for salary) if needed.
-            onValueChange(newValue.filter { it.isDigit() || it == '.' })
+        onValueChange = onValueChange,
+        label = {
+            Text(
+                text = label,
+                color = Color.White
+            )
         },
-        label = { Text(label) },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = Color.White,
+            unfocusedPlaceholderColor = FotGreen,
+            focusedContainerColor = Color.DarkGray,
+            unfocusedContainerColor = Color.DarkGray,
+            focusedBorderColor = FotGreen,
+            unfocusedBorderColor = Color.Gray,
+            focusedLabelColor = FotGreen
+        ),
+        modifier = Modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.fillMaxWidth()
+        shape = RoundedCornerShape(50) // This makes the text field pill-shaped
     )
 }
+

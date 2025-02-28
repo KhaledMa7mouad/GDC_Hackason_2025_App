@@ -7,16 +7,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.playermonitoringapp.ui.theme.screens.HomeScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playermonitoringapp.ui.theme.screens.OnboardingScreen
 import com.example.playermonitoringapp.ui.theme.screens.SigninScreen
 import com.example.playermonitoringapp.ui.theme.screens.SignupScreen
 import com.example.playermonitoringapp.ui.theme.screens.SplashScreen
 import com.example.playermonitoringapp.ui.theme.screens.PredictionInputScreen
 import com.example.playermonitoringapp.ui.theme.screens.PredictionResultScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.playermonitoringapp.ui.theme.screens.ChatScreen
 import com.example.playermonitoringapp.ui.theme.viewmodels.PredictionViewModel
+import com.example.playermonitoringapp.ui.theme.viewmodels.ChatBotViewModel
 
 object AppRoutes {
     const val SIGNUP_ROUTE = "signup"
@@ -32,8 +32,9 @@ object AppRoutes {
 @Composable
 fun AppNavHost(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    // Create a shared PredictionViewModel instance.
+    // Create shared instances of the view models.
     val predictionViewModel: PredictionViewModel = viewModel()
+    val chatBotViewModel: ChatBotViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -42,7 +43,7 @@ fun AppNavHost(modifier: Modifier = Modifier) {
     ) {
         composable(route = AppRoutes.SIGNUP_ROUTE) { SignupScreen(navController) }
         composable(route = AppRoutes.SIGNIN_ROUTE) { SigninScreen(navController) }
-        composable(route = AppRoutes.HOME_ROUTE) { HomeScreen() }
+
         composable(route = AppRoutes.SPLASH_ROUTE) { SplashScreen(navController) }
         composable(route = AppRoutes.ONBOARDING_ROUTE) { OnboardingScreen(navController) }
 
@@ -57,13 +58,15 @@ fun AppNavHost(modifier: Modifier = Modifier) {
         composable(route = AppRoutes.PREDICTION_RESULT_ROUTE) {
             val state = predictionViewModel.uiState.collectAsState().value
             state.predictionResult?.let { result ->
-                PredictionResultScreen(result = result)
+                PredictionResultScreen(result = result, navController = navController)
             } ?: Text("No prediction result available")
         }
-        // ChatScreen (User Screen) route.
+        // Chat Screen route.
         composable(route = AppRoutes.CHATSCREEN) {
-            // Pass navController to ChatScreen.
-            ChatScreen(navController = navController)
+            ChatScreen(
+                navController = navController,
+                viewModel = chatBotViewModel
+            )
         }
     }
 }

@@ -62,12 +62,14 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
-    implementation (libs.accompanist.pager)
+    implementation(libs.accompanist.pager)
+    implementation(libs.generativeai)
 
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation ("com.google.accompanist:accompanist-pager-indicators:0.32.0")
-//    implementation("com.google.ai.client.generativeai:generativeai:2.0.0")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.32.0")
+    implementation("com.google.ai.client.generativeai:generativeai:0.4.0")
+
 
 }
